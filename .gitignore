@@ -9,3 +9,7 @@
 
 # rspec failure tracking
 .rspec_status
+
+# local/personal settings
+.rubocop.yml
+login.rb
