@@ -25,7 +25,7 @@ RSpec.describe Gimmemdb::Parser do
       expect(browser.body.text).to include("Bitte wählen Sie Ihren Buchhändler")
     end
 
-    it "redirects to library page on vendor selection" do
+    it "redirects to webreader dashboard on vendor selection" do
       parser.choose_language
       parser.choose_vendor
       browser.div(class: "sidebar-menu-login").wait_until_present
@@ -33,7 +33,7 @@ RSpec.describe Gimmemdb::Parser do
     end
   end
 
-  describe "Library page" do
+  describe "Webreader dashboard" do
     it "has login functionality" do
       parser.choose_language
       parser.choose_vendor
@@ -50,5 +50,25 @@ RSpec.describe Gimmemdb::Parser do
     end
   end
 
+  describe "Library" do
+    before(:each) { parser.open_library }
+    
+    it "contains a list of books" do
+      books = browser.div(class: "cover-grid-fixer")
+      expect(books.html).to include("publication-details")
+    end
 
+    it "allows the user to select a book" do
+      parser.open_book(SECRETS[:book_name])
+    end
+  end
+
+  describe "Book" do
+    it "reads the book" do
+      parser.open_library
+      parser.open_book(SECRETS[:book_name])
+      parser.read_book
+      expect(parser.book_pages).to_not be_empty
+    end
+  end
 end
